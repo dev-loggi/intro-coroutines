@@ -13,7 +13,7 @@ suspend fun loadContributorsProgress(
         .also { logRepos(req, it) }
         .bodyList()
 
-    val allUsers = mutableListOf<User>()
+    var allUsers = emptyList<User>()
 
     for ((index, repo) in repos.withIndex()) {
         val users = service
@@ -21,8 +21,7 @@ suspend fun loadContributorsProgress(
             .also { logUsers(repo, it) }
             .bodyList()
 
-        allUsers += users
-        allUsers.aggregate()
+        allUsers = (allUsers + users).aggregate()
 
         updateResults(allUsers, index == repos.lastIndex)
     }
